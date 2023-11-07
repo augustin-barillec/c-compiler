@@ -8,8 +8,8 @@ tokens = {
     'semicolon': ';',
     'int_kw': 'int',
     'return_kw': 'return',
-    'variable_pattern': r'[a-zA-Z]\w*',
-    'integer': '[0-9]'
+    'var_pattern': r'[a-zA-Z]\w*',
+    'integer': '[0-9]+'
 }
 
 
@@ -19,19 +19,13 @@ def get_first_token(s):
         r = '^' + tokens[t]
         searched = re.search(r, s)
         if searched is not None:
-            return t, s[searched.span()[1]:]
+            return t, searched[0], s[searched.span()[1]:]
     raise ValueError(f'No token found at the beginning of {s=}')
 
 
 def lex(s):
     res = []
     while len(s.lstrip()) > 0:
-        t, s = get_first_token(s)
-        res.append(t)
+        t, value, s = get_first_token(s)
+        res.append((t, value))
     return res
-
-
-with open('file1.c') as f:
-    s_ = f.read()
-
-print(lex(s_))
